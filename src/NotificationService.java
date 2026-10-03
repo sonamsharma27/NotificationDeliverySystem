@@ -7,9 +7,8 @@ import channel.IChannel;
 
 public class NotificationService {
     ChannelRegistry registry;
-
-    public NotificationService(){
-        new NotificationRegistryInitializer();
+    public NotificationService(ChannelRegistry registry){
+        this.registry = registry;
     }
 
     public  DeliveryResult  sendNotification(Notification notification, Enums.ChannelType channelType){

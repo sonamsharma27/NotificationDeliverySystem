@@ -12,7 +12,7 @@ public class TwilioChannelProvider implements IChannelProvider {
     public DeliveryResult send(Notification notification){
         String phoneNumber = notification.getRecipient().getValue();
         Content content = notification.getContent();
-        System.out.println("Twilio sent [SMS] Notificatoin  sent to " + phoneNumber + "\n" +  content.getSubject()+ "\n"+content.getBody());
+        System.out.println("Twilio sent [SMS] notification to " + phoneNumber + "\n" +  content.getSubject()+ "\n"+content.getBody());
         return new DeliveryResult(Enums.Status.SUCCESS,null,null,"Twilio-"+phoneNumber+"-" +Instant.now());
     }
 }

@@ -1,8 +1,8 @@
 package enums;
 
-public  enum Enums {
+public  class Enums {
 
-    public  enum Status {
+    public enum Status {
         SUCCESS,
         FAILED
     }
