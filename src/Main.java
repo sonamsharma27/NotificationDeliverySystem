@@ -1,4 +1,6 @@
 import enums.Enums;
+import exceptions.ChannelNotRegisteredException;
+import exceptions.InvalidNotificationException;
 import model.Content;
 import model.DeliveryResult;
 import model.Notification;
@@ -16,6 +18,10 @@ void main() {
     Content content = new Content("Notification body","Notification subject",new ArrayList<>());
     Recipient recipient = new Recipient("8082649344");
     Notification notification = new Notification(content, new HashMap<>(), recipient);
-    DeliveryResult result = notificationService.sendNotification(notification, Enums.ChannelType.SMS);
+    try {
+        DeliveryResult result = notificationService.sendNotification(notification, Enums.ChannelType.SMS)
+    } catch (InvalidNotificationException | ChannelNotRegisteredException e){
+        System.out.println(e.getMessage());
+    }
     System.out.println(result);
 }

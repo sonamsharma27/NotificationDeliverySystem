@@ -1,5 +1,9 @@
 package channel;
 
+import enums.Enums;
+import exceptions.InvalidNotificationException;
+import exceptions.ProviderRejectedException;
+import exceptions.ProviderTimeoutException;
 import model.DeliveryResult;
 import model.Notification;
 import model.Recipient;
@@ -13,8 +17,17 @@ public class SMSChannel implements IChannel{
         this.provider = provider;
     }
     public DeliveryResult sendNotification(Notification notification){
-           DeliveryResult result =  this.provider.send(notification);
-           return  result;
+            if(!validateRecipient(notification.getRecipient())){
+                throw new InvalidNotificationException("Invalid recipient received: "+notification.getRecipient());
+            }
+
+            try {
+                return this.provider.send(notification);
+            } catch(ProviderTimeoutException e){
+                return  new DeliveryResult(Enums.Status.FAILED, Enums.ErrorCode.PROVIDER_TIMEOUT,"Provider timeout",e.getProviderReference());
+            } catch (ProviderRejectedException e){
+                return  new DeliveryResult(Enums.Status.FAILED, Enums.ErrorCode.PROVIDER_REJECTED,"Provider rejected",e.getProviderReference());
+            }
     }
 
     boolean validateRecipient(Recipient recipient){
