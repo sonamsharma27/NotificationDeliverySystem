@@ -19,9 +19,10 @@ void main() {
     Recipient recipient = new Recipient("8082649344");
     Notification notification = new Notification(content, new HashMap<>(), recipient);
     try {
-        DeliveryResult result = notificationService.sendNotification(notification, Enums.ChannelType.SMS)
+        DeliveryResult result = notificationService.sendNotification(notification, Enums.ChannelType.SMS);
+        System.out.println(result);
     } catch (InvalidNotificationException | ChannelNotRegisteredException e){
         System.out.println(e.getMessage());
     }
-    System.out.println(result);
+
 }
