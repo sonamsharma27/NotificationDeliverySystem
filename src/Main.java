@@ -13,7 +13,7 @@ import registry.ChannelRegistry;
 void main() {
 
     NotificationRegistryInitializer initializer = new NotificationRegistryInitializer();
-    ChannelRegistry registry =initializer.initialize();
+    ChannelRegistry registry = initializer.initialize();
     NotificationService notificationService = new NotificationService(registry);
     Content content = new Content("Notification body","Notification subject",new ArrayList<>());
     Recipient recipient = new Recipient("8082649344");

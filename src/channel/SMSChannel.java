@@ -17,9 +17,7 @@ public class SMSChannel implements IChannel{
 
     @Override
     public DeliveryResult sendNotification(Notification notification){
-            if(!validateRecipient(notification.getRecipient())){
-                throw new InvalidNotificationException("Invalid recipient received: "+notification.getRecipient());
-            }
+            validateNotification(notification);
             Sms sms =mapToSms(notification);
             return this.provider.send(sms);
     }
@@ -31,10 +29,20 @@ public class SMSChannel implements IChannel{
             throw new InvalidNotificationException("Notification is invalid. One or more fields is invalid/missing: "+e.getMessage());
         }
     }
-    boolean validateRecipient(Recipient recipient){
-        if(recipient==null){
-            return false;
+    //validating the must-have fields
+    private void  validateNotification(Notification notification){
+        if(notification==null){
+           throw  new InvalidNotificationException("Notification cannot be null");
         }
+        if(notification.getRecipient()==null){
+            throw  new InvalidNotificationException("Recipient cannot be null");
+        }
+        if(!validateRecipient(notification.getRecipient())){
+            throw new InvalidNotificationException("Invalid recipient received: "+notification.getRecipient());
+        }
+    }
+
+    private boolean validateRecipient(Recipient recipient){
         String phoneNumber=recipient.getValue();
         if(phoneNumber==null){
             return false;

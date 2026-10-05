@@ -14,7 +14,7 @@ public class Notification {
     public  Notification(Content content, Map<String,String> metadata, Recipient recipient){
         this.id=UUID.randomUUID().toString();
         this.content=content;
-        this.metadata=metadata;
+        this.metadata=Map.copyOf(metadata);
         this.recipient=recipient;
         this.createdAt=Instant.now();
     }

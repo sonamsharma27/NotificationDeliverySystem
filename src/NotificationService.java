@@ -8,26 +8,30 @@ import registry.ChannelRegistry;
 import channel.IChannel;
 
 public class NotificationService {
-    ChannelRegistry registry;
+    private final ChannelRegistry registry;
     public NotificationService(ChannelRegistry registry){
         this.registry = registry;
     }
 
     public  DeliveryResult  sendNotification(Notification notification, Enums.ChannelType channelType){
 
-        if(channelType==null){
-            throw new InvalidNotificationException("Channel type cannot be null");
-        }
+        validateRequest(notification, channelType);
+
+        IChannel notificationChannel = registry.getChannel(channelType);
+
+        return notificationChannel.sendNotification(notification);
+    }
+
+    private void validateRequest(Notification notification, Enums.ChannelType channelType){
 
         if(notification==null){
             throw new InvalidNotificationException("Notification cannot be null");
         }
 
-        IChannel notificationChannel = registry.getChannel(channelType);
-        if(notificationChannel==null){
-            throw new ChannelNotRegisteredException("No channel registered with type: "+channelType);
+        if(channelType==null){
+            throw new InvalidNotificationException("Channel type cannot be null");
         }
 
-        return notificationChannel.sendNotification(notification);
+
     }
 }

@@ -4,7 +4,8 @@ public  class Enums {
 
     public enum Status {
         SUCCESS,
-        FAILED
+        FAILED,
+        UNKNOWN
     }
 
     public enum ErrorCode {
