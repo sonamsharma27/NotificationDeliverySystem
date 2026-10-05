@@ -36,6 +36,9 @@ public class SMSChannel implements IChannel{
             return false;
         }
         String phoneNumber=recipient.getValue();
+        if(phoneNumber==null){
+            return false;
+        }
         if(phoneNumber.length()!=10){
             return false;
         }
