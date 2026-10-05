@@ -1,14 +1,10 @@
 package channel;
 
-import enums.Enums;
 import exceptions.InvalidNotificationException;
-import exceptions.ProviderRejectedException;
-import exceptions.ProviderTimeoutException;
 import model.DeliveryResult;
 import model.Notification;
 import model.Recipient;
 import notification.Sms;
-import provider.IChannelProvider;
 import provider.SmsProvider;
 
 public class SMSChannel implements IChannel{
@@ -24,21 +20,21 @@ public class SMSChannel implements IChannel{
             if(!validateRecipient(notification.getRecipient())){
                 throw new InvalidNotificationException("Invalid recipient received: "+notification.getRecipient());
             }
-
-            try {
-                Sms sms =maptoSms(notification);
-                return this.provider.send(sms);
-            } catch(ProviderTimeoutException e){
-                return  new DeliveryResult(Enums.Status.FAILED, Enums.ErrorCode.PROVIDER_TIMEOUT,"Provider timeout",e.getProviderReference());
-            } catch (ProviderRejectedException e){
-                return  new DeliveryResult(Enums.Status.FAILED, Enums.ErrorCode.PROVIDER_REJECTED,"Provider rejected",e.getProviderReference());
-            }
+            Sms sms =mapToSms(notification);
+            return this.provider.send(sms);
     }
 
-    private Sms maptoSms(Notification notification){
-        return new Sms(notification.getId(), notification.getContent().getBody(),notification.getRecipient().getValue());
+    private Sms mapToSms(Notification notification){
+        try{
+            return new Sms(notification.getId(), notification.getContent().getBody(),notification.getRecipient().getValue());
+        }catch (Exception e){
+            throw new InvalidNotificationException("Notification is invalid. One or more fields is invalid/missing: "+e.getMessage());
+        }
     }
     boolean validateRecipient(Recipient recipient){
+        if(recipient==null){
+            return false;
+        }
         String phoneNumber=recipient.getValue();
         if(phoneNumber.length()!=10){
             return false;

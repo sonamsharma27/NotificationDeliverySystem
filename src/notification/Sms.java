@@ -1,7 +1,5 @@
 package notification;
 
-import java.util.List;
-
 public class Sms {
     private final String id;
     private final String body;

@@ -1,6 +1,8 @@
 package provider;
 
 import enums.Enums;
+import exceptions.ProviderRejectedException;
+import exceptions.ProviderTimeoutException;
 import model.DeliveryResult;
 import notification.Sms;
 
@@ -12,7 +14,14 @@ public class TwilioChannelProvider implements SmsProvider {
     public DeliveryResult send(Sms sms){
         String phoneNumber = sms.getMobileNumber();
         String body = sms.getBody();
-        System.out.println("Twilio sent [SMS] notification to " + phoneNumber + "\n" +  phoneNumber+ "\n"+phoneNumber);
+        try {
+            // would contain the call to provider for sending notification
+            System.out.println("Twilio sent [SMS] notification to " + phoneNumber + "\n" +  body + "\n");
+        }catch(ProviderTimeoutException e){
+            return  new DeliveryResult(Enums.Status.FAILED, Enums.ErrorCode.PROVIDER_TIMEOUT,"Provider timeout",e.getProviderReference());
+        } catch (ProviderRejectedException e){
+            return  new DeliveryResult(Enums.Status.FAILED, Enums.ErrorCode.PROVIDER_REJECTED,"Provider rejected",e.getProviderReference());
+        }
         return new DeliveryResult(Enums.Status.SUCCESS,null,null,"Twilio-"+phoneNumber+"-" +Instant.now());
     }
 }
